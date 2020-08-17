@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package rpc;
+
+service ActionService {
+  rpc InitJob(InitActionRequest) returns (InitActionResponse) {}
+}
+
+
+message InitActionRequest {
+    OrchestratorId OrchestratorID = 1;
+    string RequestID = 2;
+    WorkspaceSourceType WorkspaceSource = 3;
+    string WorkspaceCRN = 4;
+  }
+
+message InitActionResponse {
+    ActionServiceId JobID = 1;
+    Status Status = 2;
+    ErrorDetails Error = 3;
+  }
+
+  message ErrorDetails {
+    string Message = 1;
+    ErrorCode Code = 2;
+  }
+
+  enum ErrorCode {
+    Unknown = 0;
+    Ok = 1;
+    Failed = 2;
+    Occupied = 3;
+  }
+
+  message OrchestratorId {
+    string  ID = 1;
+  }
+  
+  message ActionServiceId {
+    string  ID = 1;
+  }
+
+  message Status {
+    STATE State =  1;
+    TFSTATE TfState = 2;
+  }
+    
+  enum WorkspaceSourceType {
+    BLUEPRINT = 0;
+    SCHEMATICS_SANDBOX = 1;
+    SCHEMATICS = 2;
+  }
+
+
+enum STATE {
+    UNKNOWN     = 0;
+    PENDING     = 1;
+    RUNNING     = 2;
+    READY       = 3;
+    COMPLETE    = 4;
+    FAIL        = 5;
+    TIMEOUT     = 6;
+    STOPPED     = 7;
+}
+  
+  
+enum TFSTATE {
+    TFFAILURE = 0;
+    ACTIVE = 1;
+    INACTIVE = 2;
+}
+  
